@@ -5,6 +5,7 @@ The Bean Plant Disease Knowledge Base is an interactive tool designed to help fa
 This tool integrates a comprehensive knowledge base of fungal, bacterial, viral, nematode, nutritional, and abiotic disorders affecting bean plants.
 
 Features
+
 Interactive symptom selection: Select one or multiple symptoms observed in bean plants.
 Disease diagnosis: Receive a list of possible diseases matching the selected symptoms
 Category display: View whether the disease is Fungal, Bacterial, Viral, Nematode, Nutritional, or Abiotic.
@@ -13,11 +14,13 @@ Helper functions: Query the knowledge base to get diseases by symptom or symptom
 Example queries: Test the knowledge base using pre-defined queries for learning or demonstration.
 
 Technologies Used
+
 Python 3.x
 Streamlit – for creating the interactive web interface
 Dataclasses – for defining symptoms and diseases in a structured manner
 
 Knowledge Base Structure
+
 Symptom Class – Each symptom has a unique name.
 Disease Class – Each disease contains:
 name – Disease name
@@ -25,6 +28,7 @@ category – Disease type (Fungal, Bacterial, Viral, etc.)
 symptoms – List of associated Symptom objects
 
 Usage
+
 Select one or more symptoms from the multi-select dropdown.
 Click the Diagnose button.
 The app will display possible diseases with:
