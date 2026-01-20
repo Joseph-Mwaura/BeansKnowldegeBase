@@ -1,69 +1,99 @@
 /-
-  Knowledge Base:
-  Bean Plant Diseases and Symptoms
-  Lean 4 compatible
+  Bean Plant Disease Knowledge Base
+  Lean 4
+  Purpose: Formal representation of diseases and symptoms in beans
 -/
 
-namespace BeanKnowledgeBase
+namespace BeanKB
 
-/-- Symptoms observed in bean plants -/
+/--------------------------------------------------
+  SYMPTOMS
+--------------------------------------------------/
+
 inductive Symptom
-| yellow_leaves
-| brown_spots
+| yellowing_leaves
+| interveinal_chlorosis
+| brown_leaf_spots
+| angular_leaf_spots
 | water_soaked_lesions
 | leaf_mosaic
 | leaf_curling
+| leaf_drop
 | wilting
 | stunted_growth
+| root_rot
 | root_galls
 | stem_cankers
+| stem_lesions
 | white_fungal_growth
-| rust_pustules
-| leaf_drop
-| necrotic_veins
-| pod_rot
-| poor_germination
+| gray_mold
 | powdery_coating
-| interveinal_chlorosis
-| scorched_leaf_edges
+| rust_pustules
+| pod_rot
+| pod_discoloration
+| poor_germination
+| seed_rot
 | flower_drop
-| soft_rot
+| scorched_leaf_edges
+| necrotic_veins
+| brittle_leaves
+| malformed_pods
 deriving DecidableEq, Repr
 
-/-- Diseases affecting bean plants -/
+/--------------------------------------------------
+  DISEASES
+--------------------------------------------------/
+
 inductive Disease
+-- Fungal diseases
 | anthracnose
 | angular_leaf_spot
-| common_bacterial_blight
-| halo_blight
-| bean_common_mosaic_virus
 | rust
 | powdery_mildew
-| fusarium_wilt
-| root_knot_nematode
 | white_mold
-| damping_off
+| gray_mold_disease
+| fusarium_wilt
+| pythium_root_rot
+| rhizoctonia_root_rot
 | charcoal_rot
 | cercospora_leaf_spot
+
+-- Bacterial diseases
+| common_bacterial_blight
+| halo_blight
 | bacterial_soft_rot
-| iron_deficiency
+| bacterial_pod_rot
+
+-- Viral diseases
+| bean_common_mosaic_virus
+| bean_yellow_mosaic_virus
+| cucumber_mosaic_virus
+| bean_golden_yellow_mosaic_virus
+
+-- Nematodes
+| root_knot_nematode
+| lesion_nematode
+
+-- Abiotic / nutritional
+| nitrogen_deficiency
 | potassium_deficiency
+| iron_deficiency
 | water_stress
 deriving DecidableEq, Repr
 
-/--
-  Relation stating that a disease causes a symptom
--/
+/--------------------------------------------------
+  RELATION: DISEASE → SYMPTOM
+--------------------------------------------------/
+
 structure Causes (d : Disease) (s : Symptom) : Prop
 
-/-
-  ===== FACTS (AXIOMS) =====
-  Each axiom represents established agricultural knowledge
--/
+/--------------------------------------------------
+  FACTS: FUNGAL DISEASES
+--------------------------------------------------/
 
-/-- Anthracnose symptoms -/
-axiom anthracnose_brown_spots :
-  Causes Disease.anthracnose Symptom.brown_spots
+-- Anthracnose
+axiom anthracnose_leaf_spots :
+  Causes Disease.anthracnose Symptom.brown_leaf_spots
 
 axiom anthracnose_stem_cankers :
   Causes Disease.anthracnose Symptom.stem_cankers
@@ -71,28 +101,100 @@ axiom anthracnose_stem_cankers :
 axiom anthracnose_pod_rot :
   Causes Disease.anthracnose Symptom.pod_rot
 
-/-- Angular Leaf Spot symptoms -/
-axiom angular_leaf_spot_brown_spots :
-  Causes Disease.angular_leaf_spot Symptom.brown_spots
+-- Angular Leaf Spot
+axiom als_angular_spots :
+  Causes Disease.angular_leaf_spot Symptom.angular_leaf_spots
 
-axiom angular_leaf_spot_leaf_drop :
+axiom als_leaf_drop :
   Causes Disease.angular_leaf_spot Symptom.leaf_drop
 
-/-- Common Bacterial Blight symptoms -/
+-- Rust
+axiom rust_pustules_present :
+  Causes Disease.rust Symptom.rust_pustules
+
+axiom rust_yellowing :
+  Causes Disease.rust Symptom.yellowing_leaves
+
+-- Powdery Mildew
+axiom powdery_mildew_coating :
+  Causes Disease.powdery_mildew Symptom.powdery_coating
+
+axiom powdery_mildew_stunting :
+  Causes Disease.powdery_mildew Symptom.stunted_growth
+
+-- White Mold
+axiom white_mold_growth :
+  Causes Disease.white_mold Symptom.white_fungal_growth
+
+axiom white_mold_flower_drop :
+  Causes Disease.white_mold Symptom.flower_drop
+
+-- Gray Mold
+axiom gray_mold_symptom :
+  Causes Disease.gray_mold_disease Symptom.gray_mold
+
+-- Fusarium Wilt
+axiom fusarium_wilting :
+  Causes Disease.fusarium_wilt Symptom.wilting
+
+axiom fusarium_yellowing :
+  Causes Disease.fusarium_wilt Symptom.yellowing_leaves
+
+axiom fusarium_root_rot :
+  Causes Disease.fusarium_wilt Symptom.root_rot
+
+-- Root Rot Diseases
+axiom pythium_root_rot_symptom :
+  Causes Disease.pythium_root_rot Symptom.root_rot
+
+axiom rhizoctonia_root_rot_symptom :
+  Causes Disease.rhizoctonia_root_rot Symptom.root_rot
+
+-- Charcoal Rot
+axiom charcoal_rot_stunting :
+  Causes Disease.charcoal_rot Symptom.stunted_growth
+
+axiom charcoal_rot_root_rot :
+  Causes Disease.charcoal_rot Symptom.root_rot
+
+-- Cercospora Leaf Spot
+axiom cercospora_leaf_spots :
+  Causes Disease.cercospora_leaf_spot Symptom.brown_leaf_spots
+
+/--------------------------------------------------
+  FACTS: BACTERIAL DISEASES
+--------------------------------------------------/
+
+-- Common Bacterial Blight
 axiom cbb_water_soaked :
   Causes Disease.common_bacterial_blight Symptom.water_soaked_lesions
 
-axiom cbb_yellow_leaves :
-  Causes Disease.common_bacterial_blight Symptom.yellow_leaves
+axiom cbb_leaf_yellowing :
+  Causes Disease.common_bacterial_blight Symptom.yellowing_leaves
 
-/-- Halo Blight symptoms -/
-axiom halo_blight_leaf_spots :
-  Causes Disease.halo_blight Symptom.brown_spots
+axiom cbb_pod_discoloration :
+  Causes Disease.common_bacterial_blight Symptom.pod_discoloration
 
-axiom halo_blight_yellowing :
-  Causes Disease.halo_blight Symptom.yellow_leaves
+-- Halo Blight
+axiom halo_blight_spots :
+  Causes Disease.halo_blight Symptom.brown_leaf_spots
 
-/-- Bean Common Mosaic Virus symptoms -/
+axiom halo_blight_chlorosis :
+  Causes Disease.halo_blight Symptom.interveinal_chlorosis
+
+-- Bacterial Soft Rot
+axiom bacterial_soft_rot_symptom :
+  Causes Disease.bacterial_soft_rot Symptom.pod_rot
+
+-- Bacterial Pod Rot
+axiom bacterial_pod_rot_symptom :
+  Causes Disease.bacterial_pod_rot Symptom.pod_rot
+
+/--------------------------------------------------
+  FACTS: VIRAL DISEASES
+--------------------------------------------------/
+
+-- Bean Common Mosaic Virus
 axiom bcmv_mosaic :
   Causes Disease.bean_common_mosaic_virus Symptom.leaf_mosaic
 
@@ -102,57 +204,69 @@ axiom bcmv_leaf_curl :
 axiom bcmv_stunting :
   Causes Disease.bean_common_mosaic_virus Symptom.stunted_growth
 
-/-- Rust symptoms -/
-axiom rust_pustules_present :
-  Causes Disease.rust Symptom.rust_pustules
+-- Bean Yellow Mosaic Virus
+axiom bymv_mosaic :
+  Causes Disease.bean_yellow_mosaic_virus Symptom.leaf_mosaic
 
-axiom rust_leaf_drop :
-  Causes Disease.rust Symptom.leaf_drop
+axiom bymv_yellowing :
+  Causes Disease.bean_yellow_mosaic_virus Symptom.yellowing_leaves
 
-/-- Powdery Mildew symptoms -/
-axiom powdery_mildew_white_coating :
-  Causes Disease.powdery_mildew Symptom.powdery_coating
+-- Cucumber Mosaic Virus
+axiom cmv_mosaic :
+  Causes Disease.cucumber_mosaic_virus Symptom.leaf_mosaic
 
-/-- Fusarium Wilt symptoms -/
-axiom fusarium_wilt_wilting :
-  Causes Disease.fusarium_wilt Symptom.wilting
+axiom cmv_malformed_pods :
+  Causes Disease.cucumber_mosaic_virus Symptom.malformed_pods
 
-axiom fusarium_wilt_yellowing :
-  Causes Disease.fusarium_wilt Symptom.yellow_leaves
+-- Bean Golden Yellow Mosaic Virus
+axiom bgymv_yellowing :
+  Causes Disease.bean_golden_yellow_mosaic_virus Symptom.yellowing_leaves
 
-/-- Root Knot Nematode symptoms -/
+axiom bgymv_stunting :
+  Causes Disease.bean_golden_yellow_mosaic_virus Symptom.stunted_growth
+
+/--------------------------------------------------
+  FACTS: NEMATODES
+--------------------------------------------------/
+
+-- Root Knot Nematode
 axiom rkn_root_galls :
   Causes Disease.root_knot_nematode Symptom.root_galls
 
 axiom rkn_stunting :
   Causes Disease.root_knot_nematode Symptom.stunted_growth
 
-/-- White Mold symptoms -/
-axiom white_mold_fungal_growth :
-  Causes Disease.white_mold Symptom.white_fungal_growth
+-- Lesion Nematode
+axiom lesion_nematode_root_damage :
+  Causes Disease.lesion_nematode Symptom.root_rot
 
-axiom white_mold_flower_drop :
-  Causes Disease.white_mold Symptom.flower_drop
+/--------------------------------------------------
+  FACTS: ABIOTIC / NUTRITIONAL
+--------------------------------------------------/
 
-/-- Damping-Off symptoms -/
-axiom damping_off_soft_rot :
-  Causes Disease.damping_off Symptom.soft_rot
+-- Nitrogen Deficiency
+axiom nitrogen_yellowing :
+  Causes Disease.nitrogen_deficiency Symptom.yellowing_leaves
 
-axiom damping_off_poor_germination :
-  Causes Disease.damping_off Symptom.poor_germination
+axiom nitrogen_stunting :
+  Causes Disease.nitrogen_deficiency Symptom.stunted_growth
 
-/-- Nutrient Deficiency symptoms -/
-axiom iron_deficiency_chlorosis :
-  Causes Disease.iron_deficiency Symptom.interveinal_chlorosis
-
-axiom potassium_deficiency_scorching :
+-- Potassium Deficiency
+axiom potassium_scorching :
   Causes Disease.potassium_deficiency Symptom.scorched_leaf_edges
 
-/-- Water Stress symptoms -/
+axiom potassium_brittle :
+  Causes Disease.potassium_deficiency Symptom.brittle_leaves
+
+-- Iron Deficiency
+axiom iron_chlorosis :
+  Causes Disease.iron_deficiency Symptom.interveinal_chlorosis
+
+-- Water Stress
 axiom water_stress_wilting :
   Causes Disease.water_stress Symptom.wilting
 
 axiom water_stress_leaf_drop :
   Causes Disease.water_stress Symptom.leaf_drop
 
-end BeanKnowledgeBase
+end BeanKB
